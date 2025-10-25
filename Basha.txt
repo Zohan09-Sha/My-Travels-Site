@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamTravel - Domestic Packages</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom colors and Inter font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-teal': '#00ADB5',
+                        'secondary-blue': '#393E46',
+                        'accent-orange': '#FF7043',
+                        'dark-bg': '#222831',
+                        'light-text': '#EEEEEE',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        /* Custom scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF7043;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #393E46;
+        }
+
+        /* Hero Image/Background Styling */
+        .hero-background {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('https://placehold.co/1920x800/222831/FFFFFF?text=Incredible+India');
+            background-size: cover;
+            background-position: center;
+            height: 80vh; /* Adjust height for impact */
+        }
+        
+        /* Style for the package cards */
+        .package-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Utility for markdown formatting */
+        .prose strong {
+            font-weight: 700;
+            color: #FF7043; /* Accent orange for bold text */
+        }
+        .prose h3 {
+            font-size: 1.5rem; /* Large text for main days */
+            font-weight: 700;
+            margin-top: 1.5rem;
+            color: #00ADB5; /* Primary teal for headers */
+        }
+        .prose ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg font-sans text-light-text">
+
+    <!-- Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-dark-bg/95 shadow-lg backdrop-blur-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-bold text-primary-teal hover:text-accent-orange transition duration-300">
+                DreamTravel <span class="text-light-text font-light text-xl block sm:inline">Tours</span>
+            </a>
+            <div class="hidden md:flex space-x-8 text-lg">
+                <a href="#packages" class="hover:text-primary-teal transition duration-200">Packages</a>
+                <a href="#custom" class="hover:text-primary-teal transition duration-200">Custom Tours</a>
+                <a href="#why-us" class="hover:text-primary-teal transition duration-200">Why Us?</a>
+                <a href="#contact" class="hover:text-primary-teal transition duration-200">Contact</a>
+            </div>
+            <button class="md:hidden text-2xl text-light-text focus:outline-none" onclick="toggleMenu()">
+                <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-secondary-blue/95 w-full">
+            <a href="#packages" class="block py-3 px-6 text-light-text hover:bg-primary-teal transition" onclick="toggleMenu()">Packages</a>
+            <a href="#custom" class="block py-3 px-6 text-light-text hover:bg-primary-teal transition" onclick="toggleMenu()">Custom Tours</a>
+            <a href="#why-us" class="block py-3 px-6 text-light-text hover:bg-primary-teal transition" onclick="toggleMenu()">Why Us?</a>
+            <a href="#contact" class="block py-3 px-6 text-light-text hover:bg-primary-teal transition" onclick="toggleMenu()">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-background flex items-center justify-center text-center p-4">
+        <div class="max-w-4xl">
+            <h1 class="text-4xl sm:text-6xl font-extrabold mb-4 leading-tight text-light-text">
+                Unravel the Majesty of <span class="text-primary-teal">Incredible India</span>
+            </h1>
+            <p class="text-xl sm:text-2xl mb-8 text-light-text/90">
+                Your journey to the heart of India's culture, mountains, and beaches starts here.
+            </p>
+            <a href="#packages" class="inline-block px-10 py-4 bg-accent-orange text-dark-bg font-bold rounded-full shadow-lg hover:bg-primary-teal hover:text-light-text transition duration-300 transform hover:scale-105 text-lg">
+                Explore Domestic Packages
+            </a>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section id="packages" class="py-16 bg-secondary-blue/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-extrabold text-center mb-12 text-primary-teal">Our Featured Domestic Packages</h2>
+            
+            <!-- Filter/Search Bar -->
+            <div class="mb-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <input type="text" id="package-search" oninput="filterPackages()" placeholder="Search by destination or theme..." 
+                       class="w-full sm:w-1/3 p-3 rounded-xl bg-dark-bg border border-primary-teal text-light-text placeholder-gray-400 focus:ring-2 focus:ring-accent-orange focus:border-accent-orange transition">
+                <select id="package-filter" onchange="filterPackages()"
+                        class="w-full sm:w-1/4 p-3 rounded-xl bg-dark-bg border border-primary-teal text-light-text focus:ring-2 focus:ring-accent-orange focus:border-accent-orange transition">
+                    <option value="All">Filter by Theme (All)</option>
+                    <option value="Nature">Nature & Scenic</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Heritage">Heritage & Culture</option>
+                    <option value="Beach">Beach & Relaxation</option>
+                    <option value="Romantic">Honeymoon & Romantic</option>
+                </select>
+            </div>
+
+            <!-- Package Cards Grid -->
+            <div id="package-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Package Cards will be populated here by JavaScript -->
+            </div>
+            
+            <div id="no-results" class="text-center text-2xl text-accent-orange mt-10 hidden">
+                No packages found matching your criteria. Try a different search!
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why-us" class="py-16 bg-dark-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-extrabold text-center mb-12 text-accent-orange">Why Travel With Us?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <!-- Value Prop 1 -->
+                <div class="p-6 bg-secondary-blue rounded-2xl shadow-xl transition duration-300 hover:shadow-primary-teal/50 hover:border-primary-teal border border-transparent">
+                    <svg class="w-12 h-12 text-primary-teal mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4 -4m6 2a9 9 0 11-18 0a9 9 0 0118 0z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3">Verified Experts</h3>
+                    <p class="text-light-text/70">Hand-picked itineraries and local guides ensure an authentic and seamless experience across all domestic destinations.</p>
+                </div>
+                <!-- Value Prop 2 -->
+                <div class="p-6 bg-secondary-blue rounded-2xl shadow-xl transition duration-300 hover:shadow-primary-teal/50 hover:border-primary-teal border border-transparent">
+                    <svg class="w-12 h-12 text-primary-teal mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.209 0-4 1.791-4 4s1.791 4 4 4s4-1.791 4-4s-1.791-4-4-4zm0 6c-1.104 0-2-0.896-2-2s0.896-2 2-2s2 0.896 2 2s-0.896 2-2 2zm-4.707-8.707l-1.414 1.414l3.121 3.121l-1.414 1.414l-3.121-3.121l-1.414 1.414l4.535 4.535l1.414-1.414l3.121 3.121l-1.414 1.414l-4.535-4.535l1.414-1.414l-3.121-3.121l1.414-1.414l4.535 4.535l1.414-1.414z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3">Best Value Tours</h3>
+                    <p class="text-light-text/70">We leverage direct partnerships to offer competitive rates without compromising on quality hotels or service.</p>
+                </div>
+                <!-- Value Prop 3 -->
+                <div class="p-6 bg-secondary-blue rounded-2xl shadow-xl transition duration-300 hover:shadow-primary-teal/50 hover:border-primary-teal border border-transparent">
+                    <svg class="w-12 h-12 text-primary-teal mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m0 0l-3 3m3-3l3 3m-3-3V17a2 2 0 002 2h6a2 2 0 002-2v-2"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3">24/7 Support</h3>
+                    <p class="text-light-text/70">From the moment you book until you return home, our dedicated support team is available around the clock.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Tour Section -->
+    <section id="custom" class="py-16 bg-secondary-blue">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-extrabold mb-4 text-primary-teal">Can't Find Your Dream Trip?</h2>
+            <p class="text-xl mb-8 text-light-text/80">
+                Let us craft a personalized itinerary just for you. Tell us your budget, duration, and interests!
+            </p>
+            <form id="custom-tour-form" class="bg-dark-bg p-8 rounded-2xl shadow-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <input type="text" id="req-name" placeholder="Your Name" required class="p-3 rounded-lg bg-secondary-blue border border-dark-bg text-light-text focus:ring-accent-orange focus:border-accent-orange">
+                    <input type="email" id="req-email" placeholder="Your Email" required class="p-3 rounded-lg bg-secondary-blue border border-dark-bg text-light-text focus:ring-accent-orange focus:border-accent-orange">
+                    <select id="req-dest-type" required class="p-3 rounded-lg bg-secondary-blue border border-dark-bg text-light-text focus:ring-accent-orange focus:border-accent-orange">
+                        <option value="" disabled selected>Preferred Destination Type</option>
+                        <option value="Mountains">Mountains & Hills</option>
+                        <option value="Beaches">Beaches & Coastal</option>
+                        <option value="Culture">Culture & Heritage</option>
+                        <option value="Adventure">Adventure & Wildlife</option>
+                        <option value="Any">Anywhere in India</option>
+                    </select>
+                    <input type="number" id="req-budget" placeholder="Approximate Budget (INR)" required class="p-3 rounded-lg bg-secondary-blue border border-dark-bg text-light-text focus:ring-accent-orange focus:border-accent-orange">
+                </div>
+                <textarea rows="4" id="req-preferences" placeholder="Tell us more about your travel style and preferences (e.g., family trip, solo trek, duration 5 days)." 
+                          required class="w-full p-3 rounded-lg bg-secondary-blue border border-dark-bg text-light-text focus:ring-accent-orange focus:border-accent-orange mb-6"></textarea>
+                
+                <!-- GEMINI FEATURE BUTTON -->
+                <button type="button" id="generate-itinerary-btn" onclick="generateItinerary()"
+                        class="w-full px-8 py-3 mb-4 bg-primary-teal text-dark-bg font-bold rounded-lg shadow-md hover:bg-accent-orange transition duration-300 transform hover:scale-[1.01] disabled:opacity-50 disabled:cursor-not-allowed">
+                    ✨ Generate Itinerary Idea
+                </button>
+                
+                <!-- ITINERARY OUTPUT AREA -->
+                <div id="itinerary-output" class="mt-8 mb-6 text-left">
+                    <!-- AI generated content will appear here -->
+                </div>
+                
+                <button type="submit" 
+                        class="w-full px-8 py-3 bg-accent-orange text-dark-bg font-bold rounded-lg shadow-md hover:bg-primary-teal hover:text-light-text transition duration-300 transform hover:scale-[1.01]">
+                    Submit Official Custom Request
+                </button>
+                <p id="form-message" class="mt-4 text-sm text-primary-teal hidden">Your request has been submitted successfully!</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer & Contact Section -->
+    <footer id="contact" class="bg-dark-bg border-t border-secondary-blue py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Logo & About -->
+            <div class="space-y-4 md:col-span-2">
+                <h3 class="text-3xl font-bold text-primary-teal">DreamTravel Tours</h3>
+                <p class="text-light-text/70">Your trusted partner for exploring the diverse landscapes and rich culture of India, one memorable trip at a time.</p>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-accent-orange">Quick Links</h4>
+                <ul class="space-y-2 text-light-text/80">
+                    <li><a href="#packages" class="hover:text-primary-teal transition">Our Packages</a></li>
+                    <li><a href="#why-us" class="hover:text-primary-teal transition">Why Choose Us</a></li>
+                    <li><a href="#" class="hover:text-primary-teal transition">Travel Blog</a></li>
+                    <li><a href="#custom" class="hover:text-primary-teal transition">Book a Custom Tour</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Information -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-accent-orange">Get In Touch</h4>
+                <div class="space-y-2 text-light-text/80">
+                    <p>
+                        <span class="font-semibold text-primary-teal">Email:</span> <a href="mailto:info@dreamtravel.com" class="hover:underline">info@dreamtravel.com</a>
+                    </p>
+                    <p>
+                        <span class="font-semibold text-primary-teal">Phone:</span> +91 77954 25965
+                    </p>
+                    <p class="text-light-text/70">
+                        Majestic Next to Amar Hotel opp to majestic bus stand
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="mt-10 pt-6 border-t border-secondary-blue text-center text-light-text/50 text-sm">
+            &copy; <span id="current-year"></span> DreamTravel. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script type="module">
+        // --- FIREBASE AND GEMINI API SETUP (Mandatory for Canvas Environment) ---
+        
+        // Import necessary Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Global Variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        let db = null;
+        let auth = null;
+        let userId = null;
+
+        // Initialize Firebase and Auth
+        async function initializeFirebaseAndAuth() {
+            try {
+                // Initialize Firebase services
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Sign in using custom token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                    } else {
+                        // Fallback to random ID if anonymous sign-in fails or user is null
+                        userId = crypto.randomUUID();
+                    }
+                    console.log("User ID set:", userId);
+                });
+            } catch (error) {
+                console.error("Error initializing Firebase/Auth:", error);
+            }
+        }
+        initializeFirebaseAndAuth();
+
+        // Custom Modal Function (replaces alert/confirm)
+        function showModal(message, title = "Notification") {
+            const existingModal = document.querySelector('.custom-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal fixed inset-0 bg-dark-bg/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-secondary-blue p-8 rounded-xl shadow-2xl max-w-sm w-full text-center border-t-4 border-primary-teal">
+                    <h4 class="text-2xl font-bold mb-4 text-accent-orange">${title}</h4>
+                    <p class="mb-6 text-lg">${message}</p>
+                    <button onclick="this.parentNode.parentNode.remove()" 
+                            class="px-6 py-2 bg-primary-teal text-dark-bg font-semibold rounded-lg hover:bg-accent-orange transition">
+                        OK
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // --- GEMINI LLM INTEGRATION: ITINERARY GENERATOR ---
+
+        // Simple Markdown to HTML formatter for displaying LLM output cleanly
+        function formatMarkdownToHtml(markdown) {
+            // Replace headers
+            markdown = markdown.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            markdown = markdown.replace(/^## (.*$)/gim, '<h3>$1</h3>');
+            markdown = markdown.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+
+            // Replace lists (Handles * list syntax)
+            markdown = markdown.replace(/^\* (.*$)/gim, '<li>$1</li>');
+            if (markdown.includes('<li>')) {
+                markdown = '<ul>' + markdown + '</ul>';
+                // Clean up text between list items that aren't parts of the list
+                markdown = markdown.replace(/<\/li>\s*([^\n\<\>]+)/gim, '</li><p>$1</p>');
+                // Ensure list is properly closed
+                if (!markdown.endsWith('</ul>')) {
+                    markdown += '</ul>';
+                }
+            }
+            
+            // Replace bold
+            markdown = markdown.replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>');
+            
+            // Convert double newlines to paragraphs
+            markdown = markdown.replace(/\n\n/g, '</p><p>');
+            
+            // Convert single newlines to breaks (if not inside list tags)
+            markdown = markdown.replace(/\n/g, '<br>');
+            
+            // Wrap the entire content in a paragraph if it doesn't start with a structural element
+            if (!markdown.startsWith('<h') && !markdown.startsWith('<ul') && !markdown.startsWith('<p')) {
+                markdown = `<p>${markdown}</p>`;
+            }
+
+            // Remove any dangling paragraph tags from the start/end of the content
+            markdown = markdown.replace(/^<p>(.*)<\/p>$/s, '$1');
+            
+            return markdown;
+        }
+
+
+        async function generateItinerary() {
+            const name = document.getElementById('req-name').value;
+            const email = document.getElementById('req-email').value;
+            const destinationType = document.getElementById('req-dest-type').value;
+            const budget = document.getElementById('req-budget').value;
+            const preferences = document.getElementById('req-preferences').value;
+            const itineraryOutput = document.getElementById('itinerary-output');
+            const generateButton = document.getElementById('generate-itinerary-btn');
+
+            if (!name || !email || !destinationType || !budget || !preferences) {
+                showModal("Please fill out all the custom tour request fields (Name, Email, Destination Type, Budget, and Preferences) before generating an itinerary idea.", "Missing Information");
+                return;
+            }
+            
+            generateButton.disabled = true;
+            generateButton.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-dark-bg inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Crafting your itinerary...';
+            itineraryOutput.innerHTML = '<div class="text-center py-6 text-primary-teal text-xl font-medium">Please wait a moment while the AI designs your personalized trip...</div>';
+
+            const systemPrompt = `You are a creative and expert travel agent specializing in Indian domestic travel. Your task is to generate a detailed, 5-day itinerary idea based on the user's travel preferences. The response must be formatted as detailed Markdown text for easy reading. Focus on creating a unique, practical, and exciting plan that respects the budget and stated interests. Include suggested locations, activities, and a general flow.`;
+            
+            const userQuery = `Generate a 5-day itinerary idea for a trip in India based on the following preferences:
+Destination Type: ${destinationType}
+Approximate Budget (INR): ${budget} (per person)
+Travel Preferences: ${preferences}
+Traveler Name: ${name}
+Please structure the output as a Day-by-Day plan (e.g., Day 1: Location and Activity) and end with a short summary of why this plan fits their interests. Use Markdown for formatting.`;
+
+            const apiKey = ""; // Canvas will provide this
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }], // Enable grounding for real-world suggestions
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            let response;
+            let maxRetries = 3;
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) break; 
+                    
+                    if (response.status === 429 && attempt < maxRetries - 1) {
+                        const delay = Math.pow(2, attempt) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        throw new Error(`API returned status ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error("Fetch failed (attempt " + (attempt + 1) + "):", error);
+                    if (attempt === maxRetries - 1) throw error;
+                }
+            }
+
+            try {
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                
+                let generatedText = "Sorry, I couldn't generate the itinerary. The travel AI is currently unavailable.";
+                let sourcesHtml = "";
+                
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    generatedText = candidate.content.parts[0].text;
+                    
+                    // Extract grounding sources
+                    let sources = [];
+                    const groundingMetadata = candidate.groundingMetadata;
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attribution => ({
+                                uri: attribution.web?.uri,
+                                title: attribution.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+
+                        if (sources.length > 0) {
+                            sourcesHtml = '<div class="mt-4 pt-4 border-t border-primary-teal/50 text-xs text-light-text/60 text-left">';
+                            sourcesHtml += '<p class="font-semibold mb-1">Sources/Inspiration (Click to view):</p>';
+                            sources.forEach((s, index) => {
+                                sourcesHtml += `<a href="${s.uri}" target="_blank" class="block truncate hover:text-primary-teal transition">${index + 1}. ${s.title}</a>`;
+                            });
+                            sourcesHtml += '</div>';
+                        }
+                    }
+                }
+                
+                // Convert Markdown text to simple HTML/preformatted text for display
+                const htmlContent = formatMarkdownToHtml(generatedText);
+
+                itineraryOutput.innerHTML = `
+                    <div class="p-6 bg-secondary-blue rounded-xl text-left shadow-2xl border border-primary-teal">
+                        <h4 class="text-3xl font-extrabold mb-4 text-accent-orange">✨ AI Itinerary Idea</h4>
+                        <div class="prose max-w-none text-light-text space-y-3">
+                            ${htmlContent}
+                        </div>
+                        ${sourcesHtml}
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error("Error processing LLM response:", error);
+                itineraryOutput.innerHTML = '<div class="text-center py-6 text-accent-orange text-xl font-medium">Failed to connect to the AI service. Please try submitting the official request instead.</div>';
+            } finally {
+                generateButton.disabled = false;
+                generateButton.innerHTML = '✨ Generate Itinerary Idea';
+            }
+        }
+
+        // --- Package Data and Existing Logic ---
+        
+        const packages = [
+            {
+                id: 1,
+                name: "Himalayan Bliss: Kashmir",
+                duration: "6 Days / 5 Nights",
+                theme: "Nature",
+                tags: ["Romantic", "Snow", "Nature"],
+                description: "Experience paradise on Earth. Includes Shikara rides on Dal Lake, Gulmarg cable car, and serene Pahalgam valleys."
+            },
+            {
+                id: 2,
+                name: "God's Own Country: Kerala",
+                duration: "7 Days / 6 Nights",
+                theme: "Nature",
+                tags: ["Beach", "Romantic", "Nature"],
+                description: "A trip through Alleppey backwaters on a houseboat and exploring the lush, misty tea plantations of Munnar."
+            },
+            {
+                id: 3,
+                name: "Royal Deserts: Rajasthan",
+                duration: "8 Days / 7 Nights",
+                theme: "Heritage",
+                tags: ["Culture", "Heritage", "Romantic"],
+                description: "Witness the grandeur of Jaipur's palaces, the lakes of Udaipur, and the golden sand dunes of Jaisalmer."
+            },
+            {
+                id: 4,
+                name: "Sun & Sand: Goa Getaway",
+                duration: "4 Days / 3 Nights",
+                theme: "Beach",
+                tags: ["Beach", "Relaxation", "Adventure"],
+                description: "The perfect beach holiday with thrilling water sports, vibrant nightlife, and historic Portuguese architecture."
+            },
+            {
+                id: 5,
+                name: "High Altitude Adventure: Ladakh",
+                duration: "9 Days / 8 Nights",
+                theme: "Adventure",
+                tags: ["Adventure", "Nature", "Culture"],
+                description: "Journey to the land of high passes, featuring Leh, Pangong Tso lake, and ancient Buddhist monasteries."
+            },
+            // --- NEW PACKAGES ADDED BELOW ---
+            {
+                id: 10,
+                name: "Silicon & Garden City: Bangalore Sightseeing",
+                duration: "3 Days / 2 Nights",
+                theme: "Culture",
+                tags: ["Heritage", "City Break", "Modern"],
+                description: "Discover the cosmopolitan energy of Bangalore, from Cubbon Park to the tech hubs and historic Bangalore Palace."
+            },
+            {
+                id: 11,
+                name: "Spice Route & Cardamom Hills: Munnar & Thekkady",
+                duration: "5 Days / 4 Nights",
+                theme: "Nature",
+                tags: ["Adventure", "Romantic", "Wildlife"],
+                description: "Explore the rolling tea estates of Munnar, enjoy spice plantation visits, and jungle safaris in Periyar National Park, Thekkady."
+            },
+            {
+                id: 12,
+                name: "The Pearl City: Hyderabad Culture Tour",
+                duration: "4 Days / 3 Nights",
+                theme: "Heritage",
+                tags: ["Culture", "History", "City Break"],
+                description: "A historic journey covering Charminar, the grandeur of Golconda Fort, and the magnificent Qutb Shahi Tombs."
+            },
+            {
+                id: 13,
+                name: "Himachal's Jewels: Shimla & Manali",
+                duration: "7 Days / 6 Nights",
+                theme: "Adventure",
+                tags: ["Mountains", "Snow", "Romantic"],
+                description: "A classic North Indian tour covering the colonial charm of Shimla's Mall Road and the adventurous valleys of Manali and Rohtang Pass."
+            },
+            // --- END NEW PACKAGES ---
+            {
+                id: 6,
+                name: "Tropical Paradise: Andaman Islands",
+                duration: "5 Days / 4 Nights",
+                theme: "Beach",
+                tags: ["Beach", "Nature", "Adventure"],
+                description: "White sand, turquoise waters, and world-class diving at Havelock Island and Radhanagar Beach."
+            },
+            {
+                id: 7,
+                name: "Royal South: Mysore & Palaces",
+                duration: "5 Days / 4 Nights",
+                theme: "Heritage",
+                tags: ["Culture", "Palaces", "Heritage"],
+                description: "Explore the grandeur of Mysore Palace, Brindavan Gardens, and the vibrant history of the Wodeyar dynasty in Karnataka."
+            },
+            {
+                id: 8,
+                name: "Queen of Hills: Ooty & Conoor",
+                duration: "4 Days / 3 Nights",
+                theme: "Nature",
+                tags: ["Romantic", "Hills", "Nature"],
+                description: "Enjoy Nilgiri mountain views, botanical gardens, boat rides on Ooty Lake, and a ride on the famous toy train."
+            },
+            {
+                id: 9,
+                name: "Princess of Hill Stations: Kodaikanal",
+                duration: "5 Days / 4 Nights",
+                theme: "Adventure",
+                tags: ["Hills", "Adventure", "Nature", "Romantic"],
+                description: "Visit Coaker's Walk, Berijam Lake, and enjoy the misty trekking trails of this charming Tamil Nadu hill station."
+            }
+        ]; // Corrected Array Termination
+
+        // Sets the current year in the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Handles the Custom Tour Form submission (official request)
+        document.getElementById('custom-tour-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = document.getElementById('form-message');
+            message.textContent = "Thank you! Our expert will contact you within 24 hours to craft your custom tour.";
+            message.classList.remove('hidden');
+            // Reset the message after a short delay
+            setTimeout(() => {
+                message.classList.add('hidden');
+            }, 3000);
+            
+            // Clear generated itinerary when submitting the formal request
+            document.getElementById('itinerary-output').innerHTML = '';
+        });
+
+
+        // Renders an individual package card HTML 
+        function renderPackageCard(pkg) {
+            // Placeholder image based on theme
+            let imageText = pkg.name.split(':')[0]; // Use first part of the name
+            let imageColor = '1C4966'; // Default color
+            if (pkg.theme === 'Nature') imageColor = '2E86AB'; 
+            if (pkg.theme === 'Heritage') imageColor = 'B84A15'; 
+            if (pkg.theme === 'Beach') imageColor = '3DCCA4'; 
+            if (pkg.theme === 'Adventure') imageColor = 'FF6B6B';
+            if (pkg.theme === 'Culture') imageColor = 'FDBA74'; // New color for culture/city breaks
+
+            const imageUrl = `https://placehold.co/400x250/${imageColor}/FFFFFF?text=${imageText.replace(/ /g, '+')}`;
+
+            return `
+                <div class="package-card bg-secondary-blue rounded-xl overflow-hidden shadow-2xl flex flex-col" data-name="${pkg.name}" data-theme="${pkg.theme}" data-tags="${pkg.tags.join(' ')}">
+                    <img src="${imageUrl}" 
+                         onerror="this.onerror=null; this.src='https://placehold.co/400x250/393E46/EEEEEE?text=Image+Not+Found';"
+                         alt="${pkg.name}" class="w-full h-48 object-cover">
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-2 text-primary-teal">${pkg.name}</h3>
+                        <p class="text-sm font-light text-light-text/70 mb-3">${pkg.duration}</p>
+                        <p class="text-light-text/90 mb-4 flex-grow">${pkg.description}</p>
+                        <div class="mb-4">
+                            ${pkg.tags.map(tag => `<span class="inline-block bg-primary-teal/20 text-primary-teal text-xs font-semibold px-3 py-1 rounded-full mr-2 mb-2">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-end">
+                        <button onclick="bookNow('${pkg.name}')" 
+                                class="px-5 py-2 bg-accent-orange text-dark-bg font-semibold rounded-full hover:bg-primary-teal hover:text-light-text transition duration-300 shadow-lg">
+                            Inquire Now
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Renders all packages based on current filters
+        function renderPackages(filteredList) {
+            const packageList = document.getElementById('package-list');
+            const noResults = document.getElementById('no-results');
+            packageList.innerHTML = filteredList.map(renderPackageCard).join('');
+            
+            if (filteredList.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Filter logic for search bar and dropdown
+        function filterPackages() {
+            const searchInput = document.getElementById('package-search').value.toLowerCase();
+            const filterValue = document.getElementById('package-filter').value;
+
+            const filtered = packages.filter(pkg => {
+                const matchesSearch = pkg.name.toLowerCase().includes(searchInput) || 
+                                      pkg.description.toLowerCase().includes(searchInput);
+                
+                const matchesFilter = filterValue === 'All' || pkg.theme === filterValue;
+
+                return matchesSearch && matchesFilter;
+            });
+
+            renderPackages(filtered);
+        }
+
+        // Simple 'Inquire Now' handler
+        function bookNow(packageName) {
+            const phoneNumber = '+91 77954 25965'; 
+            const emailAddress = 'info@dreamtravel.com';
+            
+            const message = `Excellent choice! You are inquiring about the "${packageName}" package. Please contact us at ${phoneNumber} or ${emailAddress} to receive the latest itinerary and pricing details.`;
+            showModal(message, "Inquiry Sent!");
+        }
+
+        // Initialize the page by rendering all packages
+        window.onload = () => {
+            renderPackages(packages);
+        };
+    </script>
+
+</body>
+</html>
